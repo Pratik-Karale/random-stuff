@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extract Underlined Content</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        textarea { width: 100%; height: 200px; margin-bottom: 15px; padding: 10px; box-sizing: border-box; }
+        #output { border: 1px solid #ccc; padding: 10px; min-height: 50px; background-color: #f9f9f9; }
+        button { padding: 10px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>HTML Content Extractor (<u> tags)</h2>
+
+    <textarea id="htmlInput" placeholder="Paste your HTML content here..."></textarea>
+    
+    <button onclick="extractContent()">Extract Underlined Text</button>
+
+    <h3>Extracted Text Content:</h3>
+    <ul id="output">
+        </ul>
+
+    <script>
+        function extractContent() {
+            // 1. Get the HTML content from the textarea
+            const htmlContent = document.getElementById('htmlInput').value;
+            const outputList = document.getElementById('output');
+            
+            // Clear previous results
+            outputList.innerHTML = ''; 
+
+            // Handle empty input
+            if (!htmlContent.trim()) {
+                outputList.innerHTML = '<li>No content entered.</li>';
+                return;
+            }
+
+            // 2. Create a temporary container element
+            // This is the safest way to parse HTML strings in JavaScript
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+
+            // 3. Find all <u> elements within the temporary container
+            const uTags = tempDiv.querySelectorAll('u');
+
+            // 4. Iterate over the found elements and extract their textContent
+            if (uTags.length === 0) {
+                outputList.innerHTML = '<li>No <u> tags found in the provided HTML.</li>';
+            } else {
+                uTags.forEach(uTag => {
+                    const text = uTag.textContent.trim();
+                    if (text) { // Only add non-empty content
+                        const listItem = document.createElement('li');
+                        listItem.textContent = text;
+                        outputList.appendChild(listItem);
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
